@@ -8,6 +8,8 @@ actions:
   - rm -f packaging/deps-pkgs.tar.gz
   - make source
   - find packaging/sources/ -type f
+  fix-spec-file:
+  - bash -c "sed -i -r \"0,/Version:/ s/Release:(\s*)\S*/Release:\1${PACKIT_PROJECT_VERSION}/\" packaging/leapp-repository.spec"
 
 # name in upstream package repository/registry (e.g. in PyPI)
 upstream_package_name: leapp-repository
