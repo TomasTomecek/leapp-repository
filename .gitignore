@@ -20,6 +20,7 @@ eggs/
 lib/
 lib64/
 packaging/SRPMS/
+packaging/RPMS/
 packaging/sources/
 parts/
 sdist/
