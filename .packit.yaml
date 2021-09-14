@@ -7,9 +7,14 @@ actions:
   create-archive:
   - rm -f packaging/deps-pkgs.tar.gz
   - make source
-  - find packaging/sources/ -type f
+  - bash -c "mv packaging/sources/deps-pkgs.tar.gz packaging/"
+  - bash -c "mv packaging/sources/leapp-repository-*.tar.gz packaging/"
+  # packit requires this information even though it's not utilized
+  # given the fix-spec-file action being set
+  - bash -c "ls -1 packaging/leapp-repository-*.tar.gz"
   fix-spec-file:
-  - bash -c "sed -i -r \"0,/Version:/ s/Release:(\s*)\S*/Release:\1${PACKIT_PROJECT_VERSION}/\" packaging/leapp-repository.spec"
+  - bash -c "echo PACKIT_PROJECT_VERSION=${PACKIT_PROJECT_VERSION}"
+  - bash -c "sed -i -r \"s/Release:(\s*)\S+/Release:\1${PACKIT_RPMSPEC_RELEASE}%{?dist}/\" packaging/leapp-repository.spec"
 
 # name in upstream package repository/registry (e.g. in PyPI)
 upstream_package_name: leapp-repository
