@@ -158,7 +158,7 @@ source: prepare
 	mkdir -p packaging/tmp/
 	@__TIMESTAMP=$(TIMESTAMP) $(MAKE) _build_subpkg
 	@__TIMESTAMP=$(TIMESTAMP) $(MAKE) DIST_VERSION=$$(($(DIST_VERSION) + 1)) _build_subpkg
-	@tar -czf packaging/sources/deps-pkgs.tar.gz -C packaging/RPMS/noarch `ls packaging/RPMS/noarch | grep -o "[^/]*rpm$$"`
+	@tar -czf packaging/sources/deps-pkgs.tar.gz -C packaging/RPMS/noarch `ls -1 packaging/RPMS/noarch | grep -o "[^/]*rpm$$"`
 
 srpm: source
 	@echo "--- Build SRPM: $(PKGNAME)-$(VERSION)-$(RELEASE).. ---"
@@ -176,6 +176,7 @@ _build_subpkg:
 	@echo "--- Build RPM: $(DEPS_PKGNAME)-$(DEPS_VERSION)-$(RELEASE).. ---"
 	@cp packaging/$(DEPS_PKGNAME).spec packaging/$(DEPS_PKGNAME).spec.bak
 	@sed -i "s/1%{?dist}/$(RELEASE)%{?dist}/g" packaging/$(DEPS_PKGNAME).spec
+	# Let's be explicit about the path to the binary RPMs; Copr builders can override this
 	@rpmbuild -ba packaging/$(DEPS_PKGNAME).spec \
 		--define "_sourcedir `pwd`/packaging/sources"  \
 		--define "_srcrpmdir `pwd`/packaging/SRPMS" \
@@ -184,6 +185,8 @@ _build_subpkg:
 		--define "_rpmdir `pwd`/packaging/RPMS" \
 		--define "rhel $$(($(DIST_VERSION) + 1))" \
 		--define "dist .el$$(($(DIST_VERSION) + 1))" \
+		--define "_build_name_fmt %{ARCH}/%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm" \
+		--define "_rpmfilename %{ARCH}/%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}.rpm" \
 		--define "el$$(($(DIST_VERSION) + 1)) 1" || FAILED=1
 	@mv packaging/$(DEPS_PKGNAME).spec.bak packaging/$(DEPS_PKGNAME).spec
 

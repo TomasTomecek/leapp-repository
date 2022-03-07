@@ -8,6 +8,9 @@ downstream_package_name: leapp-repository
 upstream_tag_template: 'v{version}'
 merge_pr_in_ci: false
 
+srpm_build_deps:
+- make
+
 # This is just for the build from the CLI - all other builds for jobs use own
 # actions
 actions:
@@ -15,6 +18,8 @@ actions:
   - bash -c "rm -f packaging/deps-pkgs.tar.gz"
   - bash -c "make source"
   - bash -c "mv packaging/sources/*.gz packaging/"
+  # Copr can handle only a single spec file in the target location
+  - rm packaging/leapp-el7toel8-deps.spec
   - bash -c "find packaging/*.gz -type f"
   fix-spec-file:
   - bash -c "sed -i -r \"0,/Release:/ s/Release:(\s*)\S*/Release:\1${PACKIT_RPMSPEC_RELEASE}%{?dist}/\" packaging/leapp-repository.spec"
