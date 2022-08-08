@@ -25,8 +25,7 @@ actions:
 jobs:
 - job: copr_build
   trigger: pull_request
-  owner: "@oamg"
-  project: leapp
+  packit_instances: [stg]
   targets:
   - epel-7-x86_64
   - epel-8-x86_64
