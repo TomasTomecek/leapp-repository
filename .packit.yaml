@@ -25,12 +25,11 @@ actions:
 jobs:
 - job: copr_build
   trigger: pull_request
-  metadata:
-    owner: "@oamg"
-    project: leapp
-    targets:
-    - epel-7-x86_64
-    - epel-8-x86_64
+  owner: "@oamg"
+  project: leapp
+  targets:
+  - epel-7-x86_64
+  - epel-8-x86_64
   actions:
     create-archive:
     - bash -c "rm -f packaging/deps-pkgs.tar.gz"
@@ -44,13 +43,12 @@ jobs:
     - bash -c "sed -i \"s/1%{?dist}/0%{?dist}/g\" packaging/leapp-repository.spec"
 - job: copr_build
   trigger: commit
-  metadata:
-    branch: master
-    owner: "@oamg"
-    project: leapp
-    targets:
-    - epel-7-x86_64
-    - epel-8-x86_64
+  branch: master
+  owner: "@oamg"
+  project: leapp
+  targets:
+  - epel-7-x86_64
+  - epel-8-x86_64
   actions:
     create-archive:
     - bash -c "rm -f packaging/deps-pkgs.tar.gz"
@@ -64,12 +62,11 @@ jobs:
     - bash -c "sed -i \"s/1%{?dist}/100%{?dist}/g\" packaging/leapp-repository.spec"
 - job: copr_build
   trigger: release
-  metadata:
-    owner: "@oamg"
-    project: leapp
-    targets:
-    - epel-7-x86_64
-    - epel-8-x86_64
+  owner: "@oamg"
+  project: leapp
+  targets:
+  - epel-7-x86_64
+  - epel-8-x86_64
   actions:
     create-archive:
     - bash -c "rm -f packaging/deps-pkgs.tar.gz"
